@@ -1,12 +1,10 @@
 import React from "react";
-import Counter from "./Counter";
-import Home from "./Home";
+import TodoList from "./components/TodoList";
 
 const App = () => {
   return (
     <>
-      <Home title="typescript" desc="ts is good" />
-      <Counter />
+      <TodoList />
     </>
   );
 };
