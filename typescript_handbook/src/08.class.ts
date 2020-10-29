@@ -20,6 +20,7 @@ dog.move(10);
 dog.bark();
 
 // accessors
+/*
 class Employee {
   private _fullName: string;
 
@@ -37,3 +38,4 @@ employee.fullName = "Bob Smith";
 if (employee.fullName) {
   console.log(employee.fullName);
 }
+*/
