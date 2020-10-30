@@ -16,4 +16,4 @@
 #### typescript_tsreact
 
 - https://www.inflearn.com/course/react-typescript-webgame
-- ZeroCho 인프런 강의보고 공부
+- ZeroCho 인프런 강의보고 공부하기
