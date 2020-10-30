@@ -25,13 +25,6 @@ const NumberBaseball = () => {
       e.preventDefault();
       const input = inputEl.current;
       if (value === answer.join("")) {
-        setTries((t) => [
-          ...t,
-          {
-            try: value,
-            result: "홈런!",
-          },
-        ]);
         setResult("홈런!");
         alert("게임을 다시 실행합니다.");
         setValue("");
