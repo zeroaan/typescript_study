@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack"
+    "dev": "webpack serve --env development --hot"
   },
   "keywords": [],
   "author": "Ahn",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "webpack": "^5.3.2",
-    "webpack-cli": "^4.1.0"
+    "webpack-cli": "^4.1.0",
+    "webpack-dev-server": "^3.11.0"
   }
 }
