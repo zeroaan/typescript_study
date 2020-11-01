@@ -21,7 +21,7 @@ const NumberBaseball = () => {
   const inputEl = useRef<HTMLInputElement | null>(null);
 
   const onSubmitForm = useCallback(
-    (e: React.FormEvent) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const input = inputEl.current;
       if (value === answer.join("")) {
