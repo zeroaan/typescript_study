@@ -25,4 +25,8 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     publicPath: "/dist",
   },
+  devServer: {
+    port: 8080,
+    publicPath: "/dist/",
+  },
 };
