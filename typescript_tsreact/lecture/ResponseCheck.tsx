@@ -5,13 +5,13 @@ const ResponseCheck = () => {
   const [state, setState] = useState("waiting");
   const [message, setMessage] = useState("클릭해서 시작하세요.");
   const [result, setResult] = useState<number[]>([]);
-  const timeout = useRef<number>(null);
+  const timeout = useRef<number | null>(null);
   const startTime = useRef(0);
   const endTime = useRef(0);
 
   const onClickScreen = useCallback(() => {
     if (state === "waiting") {
-      timeout.current = setTimeout(() => {
+      timeout.current = window.setTimeout(() => {
         setState("now");
         setMessage("지금 클릭");
         startTime.current = new Date().getTime();
@@ -19,7 +19,9 @@ const ResponseCheck = () => {
       setState("ready");
       setMessage("초록색이 되면 클릭하세요.");
     } else if (state === "ready") {
-      clearTimeout(timeout.current!);
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
       setState("waiting");
       setMessage("너무 성급하시군요! 초록색이 된 후에 클릭하세요.");
     } else if (state === "now") {
@@ -30,7 +32,7 @@ const ResponseCheck = () => {
         return [...prevResult, endTime.current - startTime.current];
       });
     }
-  }, []);
+  }, [state]);
 
   const onReset = useCallback(() => {
     setResult([]);
