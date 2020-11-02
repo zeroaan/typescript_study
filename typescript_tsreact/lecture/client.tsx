@@ -1,11 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { hot } from "react-hot-loader/root"
+import { hot } from "react-hot-loader/root";
 
-import NumberBaseball from "./NumberBaseball";
+import ResponseCheck from "./ResponseCheck";
 
-const Hot = hot(NumberBaseball); // HOC
+const Hot = hot(ResponseCheck); // HOC
 
-ReactDOM.render(<Hot />, document.querySelector("#root"))
-
-
+ReactDOM.render(<Hot />, document.querySelector("#root"));
