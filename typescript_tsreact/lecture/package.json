@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "webpack",
     "dev": "webpack serve --env development --hot"
   },
   "keywords": [],

@@ -23,7 +23,7 @@ const ResponseCheck = () => {
         clearTimeout(timeout.current);
       }
       setState("waiting");
-      setMessage("너무 성급하시군요! 초록색이 된 후에 클릭하세요.");
+      setMessage("너무 성급하시군요!\n초록색이 된 후에 클릭하세요.");
     } else if (state === "now") {
       endTime.current = new Date().getTime();
       setState("waiting");
