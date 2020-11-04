@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dispatch, useCallback } from "react";
+import { Dispatch, useCallback, memo } from "react";
 import { clickCell } from "./TicTacToe";
 
 interface Props {
@@ -24,4 +24,4 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex, dispatch, cellData }) => {
   );
 };
 
-export default Td;
+export default memo(Td);
