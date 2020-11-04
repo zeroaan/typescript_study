@@ -11,21 +11,23 @@ const Table: React.FC<Props> = ({ tableData, dispatch }) => {
   return (
     <>
       <table>
-        {Array(tableData.length)
-          .fill(null)
-          .map((tr, i) =>
-            useMemo(
-              () => (
-                <Tr
-                  key={i}
-                  dispatch={dispatch}
-                  rowIndex={i}
-                  rowData={tableData[i]}
-                />
-              ),
-              [tableData[i]]
-            )
-          )}
+        <tbody>
+          {Array(tableData.length)
+            .fill(null)
+            .map((tr, i) =>
+              useMemo(
+                () => (
+                  <Tr
+                    key={i}
+                    dispatch={dispatch}
+                    rowIndex={i}
+                    rowData={tableData[i]}
+                  />
+                ),
+                [tableData[i]]
+              )
+            )}
+        </tbody>
       </table>
     </>
   );

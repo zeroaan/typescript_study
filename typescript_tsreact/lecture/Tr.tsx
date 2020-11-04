@@ -13,7 +13,7 @@ const Tr: React.FC<Props> = ({ rowData, rowIndex, dispatch }) => {
       <tr>
         {Array(rowData.length)
           .fill(null)
-          .map((td, i) => {
+          .map((td, i) =>
             useMemo(
               () => (
                 <Td
@@ -27,8 +27,8 @@ const Tr: React.FC<Props> = ({ rowData, rowIndex, dispatch }) => {
                 </Td>
               ),
               [rowData[i]]
-            );
-          })}
+            )
+          )}
       </tr>
     </>
   );
