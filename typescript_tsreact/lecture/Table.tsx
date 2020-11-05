@@ -12,9 +12,9 @@ const Table = () => {
         <tbody>
           {Array(tableData.length)
             .fill(null)
-            .map((tr, i) => (
-              <Tr key={i} rowIndex={i} />
-            ))}
+            .map((tr, i) =>
+              React.useMemo(() => <Tr key={i} rowIndex={i} />, [tableData[i]])
+            )}
         </tbody>
       </table>
     </>

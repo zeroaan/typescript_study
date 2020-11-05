@@ -126,4 +126,4 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex }) => {
   );
 };
 
-export default Td;
+export default React.memo(Td);
