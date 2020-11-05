@@ -16,12 +16,7 @@ const Tr: React.FC<Props> = ({ rowIndex }) => {
         {tableData[0] &&
           Array(tableData[0].length)
             .fill(null)
-            .map((td, i) =>
-              React.useMemo(
-                () => <Td key={i} rowIndex={rowIndex} cellIndex={i} />,
-                [tableData[0][i]]
-              )
-            )}
+            .map((td, i) => <Td key={i} rowIndex={rowIndex} cellIndex={i} />)}
       </tr>
     </>
   );
