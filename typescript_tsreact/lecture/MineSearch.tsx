@@ -23,7 +23,7 @@ export const CODE = {
   FLAG_MINE: -5,
   CLICKED_MINE: -6,
   OPENED: 0,
-} as const;
+};
 
 interface Context {
   tableData: number[][];
