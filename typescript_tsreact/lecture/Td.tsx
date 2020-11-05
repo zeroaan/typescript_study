@@ -1,14 +1,13 @@
 import * as React from "react";
 import { useCallback, useContext, memo, useMemo } from "react";
+import { CODE, TableContext } from "./MineSearch";
 import {
-  CODE,
   openCell,
   clickMine,
   flagCell,
   questionCell,
   normalizeCell,
-  TableContext,
-} from "./MineSearch";
+} from "./actions";
 
 interface Props {
   rowIndex: number;

@@ -2,6 +2,17 @@ import * as React from "react";
 import { useEffect, useReducer, createContext, useMemo } from "react";
 import Form from "./Form";
 import Table from "./Table";
+import {
+  ReducerActions,
+  START_GAME,
+  OPEN_CELL,
+  CLICK_MINE,
+  FLAG_CELL,
+  QUESTION_CELL,
+  NORMALIZE_CELL,
+  INCREMENT_TIMER,
+  incrementTimer,
+} from "./actions";
 
 export const CODE = {
   MINE: -7,
@@ -12,7 +23,7 @@ export const CODE = {
   FLAG_MINE: -5,
   CLICKED_MINE: -6,
   OPENED: 0,
-};
+} as const;
 
 interface Context {
   tableData: number[][];
@@ -78,91 +89,6 @@ const plantMine = (row: number, cell: number, mine: number): number[][] => {
   return data;
 };
 
-const START_GAME = "START_GAME" as const;
-const OPEN_CELL = "OPEN_CELL" as const;
-const CLICK_MINE = "CLICK_MINE" as const;
-const FLAG_CELL = "FLAG_CELL" as const;
-const QUESTION_CELL = "QUESTION_CELL" as const;
-const NORMALIZE_CELL = "NORMALIZE_CELL" as const;
-const INCREMENT_TIMER = "INCREMENT_TIMER" as const;
-
-interface StartGameAction {
-  type: typeof START_GAME;
-  row: number;
-  cell: number;
-  mine: number;
-}
-export const startGame = (
-  row: number,
-  cell: number,
-  mine: number
-): StartGameAction => {
-  return { type: START_GAME, row, cell, mine };
-};
-
-interface OpenCellAction {
-  type: typeof OPEN_CELL;
-  row: number;
-  cell: number;
-}
-export const openCell = (row: number, cell: number): OpenCellAction => {
-  return { type: OPEN_CELL, row, cell };
-};
-
-interface ClickMineAction {
-  type: typeof CLICK_MINE;
-  row: number;
-  cell: number;
-}
-export const clickMine = (row: number, cell: number): ClickMineAction => {
-  return { type: CLICK_MINE, row, cell };
-};
-
-interface FlagCellAction {
-  type: typeof FLAG_CELL;
-  row: number;
-  cell: number;
-}
-export const flagCell = (row: number, cell: number): FlagCellAction => {
-  return { type: FLAG_CELL, row, cell };
-};
-
-interface QuestionCellAction {
-  type: typeof QUESTION_CELL;
-  row: number;
-  cell: number;
-}
-export const questionCell = (row: number, cell: number): QuestionCellAction => {
-  return { type: QUESTION_CELL, row, cell };
-};
-
-interface NormalizeCellAction {
-  type: typeof NORMALIZE_CELL;
-  row: number;
-  cell: number;
-}
-export const normalizeCell = (
-  row: number,
-  cell: number
-): NormalizeCellAction => {
-  return { type: NORMALIZE_CELL, row, cell };
-};
-
-interface IncrementTimerAction {
-  type: typeof INCREMENT_TIMER;
-}
-export const incrementTimer = (): IncrementTimerAction => {
-  return { type: INCREMENT_TIMER };
-};
-
-type ReducerActions =
-  | StartGameAction
-  | OpenCellAction
-  | ClickMineAction
-  | FlagCellAction
-  | QuestionCellAction
-  | NormalizeCellAction
-  | IncrementTimerAction;
 const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
   switch (action.type) {
     case START_GAME: {
@@ -346,9 +272,9 @@ const MineSearch = () => {
   );
 
   useEffect(() => {
-    let timer: any;
+    let timer: number;
     if (halted === false) {
-      timer = setInterval(() => {
+      timer = window.setInterval(() => {
         dispatch(incrementTimer());
       }, 1000);
     }
