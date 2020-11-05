@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, memo } from "react";
 import { TableContext } from "./MineSearch";
 import { startGame } from "./MineSearch";
 
@@ -56,4 +56,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default memo(Form);

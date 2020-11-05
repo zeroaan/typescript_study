@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, memo } from "react";
 import { TableContext } from "./MineSearch";
 import Td from "./Td";
 
@@ -22,4 +22,4 @@ const Tr: React.FC<Props> = ({ rowIndex }) => {
   );
 };
 
-export default React.memo(Tr);
+export default memo(Tr);

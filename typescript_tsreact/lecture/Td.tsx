@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, memo, useMemo } from "react";
 import {
   CODE,
   openCell,
@@ -116,17 +116,20 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex }) => {
     [tableData[rowIndex][cellIndex], halted]
   );
 
-  return (
-    <>
-      <td
-        style={getTdStyle(tableData[rowIndex][cellIndex])}
-        onClick={onClickTd}
-        onContextMenu={onRightClickTd}
-      >
-        {getTdText(tableData[rowIndex][cellIndex])}
-      </td>
-    </>
+  return useMemo(
+    () => (
+      <>
+        <td
+          style={getTdStyle(tableData[rowIndex][cellIndex])}
+          onClick={onClickTd}
+          onContextMenu={onRightClickTd}
+        >
+          {getTdText(tableData[rowIndex][cellIndex])}
+        </td>
+      </>
+    ),
+    [tableData[rowIndex][cellIndex]]
   );
 };
 
-export default React.memo(Td);
+export default memo(Td);

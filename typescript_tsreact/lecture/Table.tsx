@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, memo } from "react";
 import { TableContext } from "./MineSearch";
 import Tr from "./Tr";
 
@@ -21,4 +21,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default memo(Table);
