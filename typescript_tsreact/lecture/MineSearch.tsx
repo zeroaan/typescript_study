@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useReducer, createContext, useMemo } from "react";
+import { useEffect, useReducer, createContext, useMemo } from "react";
 import Form from "./Form";
 import Table from "./Table";
 
@@ -28,16 +28,24 @@ export const TableContext = createContext<Context>({
 
 interface ReducerState {
   tableData: number[][];
+  data: { row: number; cell: number; mine: number };
   timer: number;
   result: string;
   halted: boolean;
+  openedCount: number;
 }
 
 const initialState: ReducerState = {
   tableData: [],
+  data: {
+    row: 0,
+    cell: 0,
+    mine: 0,
+  },
   timer: 0,
   result: "",
   halted: true,
+  openedCount: 0,
 };
 
 const plantMine = (row: number, cell: number, mine: number): number[][] => {
@@ -76,6 +84,7 @@ const CLICK_MINE = "CLICK_MINE" as const;
 const FLAG_CELL = "FLAG_CELL" as const;
 const QUESTION_CELL = "QUESTION_CELL" as const;
 const NORMALIZE_CELL = "NORMALIZE_CELL" as const;
+const INCREMENT_TIMER = "INCREMENT_TIMER" as const;
 
 interface StartGameAction {
   type: typeof START_GAME;
@@ -139,20 +148,36 @@ export const normalizeCell = (
   return { type: NORMALIZE_CELL, row, cell };
 };
 
+interface IncrementTimerAction {
+  type: typeof INCREMENT_TIMER;
+}
+export const incrementTimer = (): IncrementTimerAction => {
+  return { type: INCREMENT_TIMER };
+};
+
 type ReducerActions =
   | StartGameAction
   | OpenCellAction
   | ClickMineAction
   | FlagCellAction
   | QuestionCellAction
-  | NormalizeCellAction;
+  | NormalizeCellAction
+  | IncrementTimerAction;
 const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
   switch (action.type) {
     case START_GAME: {
       return {
         ...state,
+        data: {
+          row: action.row,
+          cell: action.cell,
+          mine: action.mine,
+        },
+        openedCount: 0,
         tableData: plantMine(action.row, action.cell, action.mine),
         halted: false,
+        timer: 0,
+        result: "",
       };
     }
     case OPEN_CELL: {
@@ -161,6 +186,7 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
         tableData[i] = [...row];
       });
       const checked: string[] = [];
+      let openedCount: number = 0;
       const checkAround = (row: number, cell: number) => {
         if (
           [
@@ -207,7 +233,6 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
         const count: number = around.filter((v) =>
           [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
         ).length;
-        tableData[row][cell] = count;
         if (count === 0) {
           if (row > -1) {
             const near = [];
@@ -230,9 +255,28 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
             });
           }
         }
+        if (tableData[row][cell] === CODE.NORMAL) {
+          openedCount += 1;
+        }
+        tableData[row][cell] = count;
       };
       checkAround(action.row, action.cell);
-      return { ...state, tableData };
+      let halted = false;
+      let result = "";
+      if (
+        state.data.row * state.data.cell - state.data.mine ===
+        state.openedCount + openedCount
+      ) {
+        halted = true;
+        result = `${state.timer}초만에 승리하셨습니다.`;
+      }
+      return {
+        ...state,
+        tableData,
+        openedCount: state.openedCount + openedCount,
+        halted,
+        result,
+      };
     }
     case CLICK_MINE: {
       const tableData = [...state.tableData];
@@ -270,6 +314,12 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
       }
       return { ...state, tableData };
     }
+    case INCREMENT_TIMER: {
+      return {
+        ...state,
+        timer: state.timer + 1,
+      };
+    }
     default:
       return state;
   }
@@ -290,11 +340,24 @@ const MineSearch = () => {
     [tableData, halted]
   );
 
+  useEffect(() => {
+    let timer: any;
+    if (halted === false) {
+      timer = setInterval(() => {
+        dispatch(incrementTimer());
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [halted]);
+
   return (
     <>
       <TableContext.Provider value={value}>
         <Form />
-        <div>{timer}</div>
+        <div>{timer}초</div>
         <Table />
         <div>{result}</div>
       </TableContext.Provider>
