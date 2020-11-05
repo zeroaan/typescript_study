@@ -31,9 +31,39 @@ interface ReducerState {
 }
 
 const initialState: ReducerState = {
-  tableData: [][],
+  tableData: [],
   timer: 0,
   result: "",
+};
+
+const plantMine = (row: number, cell: number, mine: number): number[][] => {
+  const candidate = Array(row * cell)
+    .fill(null)
+    .map((arr, i) => {
+      return i;
+    });
+  const shuffle = [];
+  while (candidate.length > row * cell - mine) {
+    const chosen = candidate.splice(
+      Math.floor(Math.random() * candidate.length),
+      1
+    )[0];
+    shuffle.push(chosen);
+  }
+  const data = [];
+  for (let i = 0; i < row; i++) {
+    const rowData: number[] = [];
+    data.push(rowData);
+    for (let j = 0; j < cell; j++) {
+      rowData.push(CODE.NORMAL);
+    }
+  }
+  for (let k = 0; k < shuffle.length; k++) {
+    const ver = Math.floor(shuffle[k] / cell);
+    const hor = shuffle[k] % cell;
+    data[ver][hor] = CODE.MINE;
+  }
+  return data;
 };
 
 export const START_GAME = "START_GAME" as const;
@@ -46,7 +76,7 @@ interface StartGameAction {
 }
 
 type ReducerActions = StartGameAction;
-const reducer = (state: ReducerState, action: ReducerActions) => {
+const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
   switch (action.type) {
     case START_GAME:
       return {
@@ -59,12 +89,18 @@ const reducer = (state: ReducerState, action: ReducerActions) => {
 };
 
 const MineSearch = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer<
+    React.Reducer<ReducerState, ReducerActions>
+  >(reducer, initialState);
   const { tableData } = state;
 
-  const value = useMemo(() => ({
-    tableData, dispatch
-  }), [tableData]);
+  const value = useMemo(
+    () => ({
+      tableData,
+      dispatch,
+    }),
+    [tableData]
+  );
 
   return (
     <>

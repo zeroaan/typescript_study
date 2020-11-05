@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useCallback, useContext } from "react";
 import { TableContext } from "./MineSearch";
+import { START_GAME } from "./MineSearch";
 
 const Form = () => {
   const [row, setRow] = useState(10);
@@ -27,7 +28,7 @@ const Form = () => {
 
   return (
     <>
-      <form>
+      <div>
         <input
           type="number"
           placeholder="세로"
@@ -50,7 +51,7 @@ const Form = () => {
           onChange={onchangeInput}
         />
         <button onClick={onClickBtn}>시작</button>
-      </form>
+      </div>
     </>
   );
 };
