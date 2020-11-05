@@ -23,6 +23,9 @@ const getTdStyle = (code: number): object => {
         background: "#444",
       };
     case CODE.CLICKED_MINE:
+      return {
+        background: "red",
+      };
     case CODE.OPENED:
       return {
         background: "white",
@@ -30,7 +33,7 @@ const getTdStyle = (code: number): object => {
     case CODE.FLAG:
     case CODE.FLAG_MINE:
       return {
-        background: "red",
+        background: "orange",
       };
     case CODE.QUESTION:
     case CODE.QUESTION_MINE:
@@ -50,7 +53,7 @@ const getTdText = (code: number): string | number => {
     case CODE.MINE:
       return "X";
     case CODE.CLICKED_MINE:
-      return "펑";
+      return "@";
     case CODE.FLAG:
     case CODE.FLAG_MINE:
       return "!";
