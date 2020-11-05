@@ -16,11 +16,13 @@ export const CODE = {
 
 interface Context {
   tableData: number[][];
+  halted: boolean;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
 export const TableContext = createContext<Context>({
   tableData: [],
+  halted: true,
   dispatch: () => {},
 });
 
@@ -28,12 +30,14 @@ interface ReducerState {
   tableData: number[][];
   timer: number;
   result: string;
+  halted: boolean;
 }
 
 const initialState: ReducerState = {
   tableData: [],
   timer: 0,
   result: "",
+  halted: true,
 };
 
 const plantMine = (row: number, cell: number, mine: number): number[][] => {
@@ -66,7 +70,12 @@ const plantMine = (row: number, cell: number, mine: number): number[][] => {
   return data;
 };
 
-export const START_GAME = "START_GAME" as const;
+const START_GAME = "START_GAME" as const;
+const OPEN_CELL = "OPEN_CELL" as const;
+const CLICK_MINE = "CLICK_MINE" as const;
+const FLAG_CELL = "FLAG_CELL" as const;
+const QUESTION_CELL = "QUESTION_CELL" as const;
+const NORMALIZE_CELL = "NORMALIZE_CELL" as const;
 
 interface StartGameAction {
   type: typeof START_GAME;
@@ -74,15 +83,120 @@ interface StartGameAction {
   cell: number;
   mine: number;
 }
+export const startGame = (
+  row: number,
+  cell: number,
+  mine: number
+): StartGameAction => {
+  return { type: START_GAME, row, cell, mine };
+};
 
-type ReducerActions = StartGameAction;
+interface OpenCellAction {
+  type: typeof OPEN_CELL;
+  row: number;
+  cell: number;
+}
+export const openCell = (row: number, cell: number): OpenCellAction => {
+  return { type: OPEN_CELL, row, cell };
+};
+
+interface ClickMineAction {
+  type: typeof CLICK_MINE;
+  row: number;
+  cell: number;
+}
+export const clickMine = (row: number, cell: number): ClickMineAction => {
+  return { type: CLICK_MINE, row, cell };
+};
+
+interface FlagCellAction {
+  type: typeof FLAG_CELL;
+  row: number;
+  cell: number;
+}
+export const flagCell = (row: number, cell: number): FlagCellAction => {
+  return { type: FLAG_CELL, row, cell };
+};
+
+interface QuestionCellAction {
+  type: typeof QUESTION_CELL;
+  row: number;
+  cell: number;
+}
+export const questionCell = (row: number, cell: number): QuestionCellAction => {
+  return { type: QUESTION_CELL, row, cell };
+};
+
+interface NormalizeCellAction {
+  type: typeof NORMALIZE_CELL;
+  row: number;
+  cell: number;
+}
+export const normalizeCell = (
+  row: number,
+  cell: number
+): NormalizeCellAction => {
+  return { type: NORMALIZE_CELL, row, cell };
+};
+
+type ReducerActions =
+  | StartGameAction
+  | OpenCellAction
+  | ClickMineAction
+  | FlagCellAction
+  | QuestionCellAction
+  | NormalizeCellAction;
 const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
   switch (action.type) {
-    case START_GAME:
+    case START_GAME: {
       return {
         ...state,
         tableData: plantMine(action.row, action.cell, action.mine),
+        halted: false,
       };
+    }
+    case OPEN_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      tableData[action.row][action.cell] = CODE.OPENED;
+      return { ...state, tableData };
+    }
+    case CLICK_MINE: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      tableData[action.row][action.cell] = CODE.CLICKED_MINE;
+      return { ...state, tableData, halted: true };
+    }
+    case FLAG_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.MINE) {
+        tableData[action.row][action.cell] = CODE.FLAG_MINE;
+      } else {
+        tableData[action.row][action.cell] = CODE.FLAG;
+      }
+      return { ...state, tableData };
+    }
+    case QUESTION_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.FLAG_MINE) {
+        tableData[action.row][action.cell] = CODE.QUESTION_MINE;
+      } else {
+        tableData[action.row][action.cell] = CODE.QUESTION;
+      }
+      return { ...state, tableData };
+    }
+    case NORMALIZE_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.QUESTION_MINE) {
+        tableData[action.row][action.cell] = CODE.MINE;
+      } else {
+        tableData[action.row][action.cell] = CODE.NORMAL;
+      }
+      return { ...state, tableData };
+    }
     default:
       return state;
   }
@@ -92,23 +206,24 @@ const MineSearch = () => {
   const [state, dispatch] = useReducer<
     React.Reducer<ReducerState, ReducerActions>
   >(reducer, initialState);
-  const { tableData } = state;
+  const { tableData, halted, timer, result } = state;
 
   const value = useMemo(
     () => ({
       tableData,
+      halted,
       dispatch,
     }),
-    [tableData]
+    [tableData, halted]
   );
 
   return (
     <>
       <TableContext.Provider value={value}>
         <Form />
-        <div>{state.timer}</div>
+        <div>{timer}</div>
         <Table />
-        <div>{state.result}</div>
+        <div>{result}</div>
       </TableContext.Provider>
     </>
   );
