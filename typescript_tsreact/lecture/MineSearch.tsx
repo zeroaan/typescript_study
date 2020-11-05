@@ -14,19 +14,24 @@ export const CODE = {
   OPENED: 0,
 };
 
-export const TableContext = createContext({
+interface Context {
+  tableData: number[][];
+  dispatch: React.Dispatch<ReducerActions>;
+}
+
+export const TableContext = createContext<Context>({
   tableData: [],
   dispatch: () => {},
 });
 
 interface ReducerState {
-  tableData: string[];
+  tableData: number[][];
   timer: number;
   result: string;
 }
 
 const initialState: ReducerState = {
-  tableData: [],
+  tableData: [][],
   timer: 0,
   result: "",
 };
@@ -55,14 +60,15 @@ const reducer = (state: ReducerState, action: ReducerActions) => {
 
 const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { tableData } = state;
 
-  const value = useMemo(() => {
-    tableData: state.tableData, dispatch;
-  }, [state.tableData]);
+  const value = useMemo(() => ({
+    tableData, dispatch
+  }), [tableData]);
 
   return (
     <>
-      <TableContext.Provider value={{ value }}>
+      <TableContext.Provider value={value}>
         <Form />
         <div>{state.timer}</div>
         <Table />
