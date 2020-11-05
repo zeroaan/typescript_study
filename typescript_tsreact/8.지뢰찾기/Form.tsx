@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useCallback, useContext, memo } from "react";
 import { TableContext } from "./MineSearch";
-import { startGame } from "./MineSearch";
+import { startGame } from "./actions";
 
 const Form = () => {
   const [row, setRow] = useState(10);
