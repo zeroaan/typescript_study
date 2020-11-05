@@ -51,7 +51,7 @@ const getTdText = (code: number): string | number => {
     case CODE.NORMAL:
       return "";
     case CODE.MINE:
-      return "X";
+      return "";
     case CODE.CLICKED_MINE:
       return "@";
     case CODE.FLAG:
@@ -69,7 +69,6 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex }) => {
   const { tableData, halted, dispatch } = useContext(TableContext);
 
   const onClickTd = useCallback(() => {
-    console.log(halted);
     if (halted) {
       return;
     }

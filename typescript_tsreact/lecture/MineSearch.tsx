@@ -282,7 +282,12 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
       const tableData = [...state.tableData];
       tableData[action.row] = [...state.tableData[action.row]];
       tableData[action.row][action.cell] = CODE.CLICKED_MINE;
-      return { ...state, tableData, halted: true };
+      return {
+        ...state,
+        tableData,
+        halted: true,
+        result: "지뢰를 클릭하셨습니다!",
+      };
     }
     case FLAG_CELL: {
       const tableData = [...state.tableData];
