@@ -69,6 +69,7 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex }) => {
   const { tableData, halted, dispatch } = useContext(TableContext);
 
   const onClickTd = useCallback(() => {
+    console.log(halted);
     if (halted) {
       return;
     }
@@ -128,7 +129,7 @@ const Td: React.FC<Props> = ({ rowIndex, cellIndex }) => {
         </td>
       </>
     ),
-    [tableData[rowIndex][cellIndex]]
+    [tableData[rowIndex][cellIndex], halted]
   );
 };
 
