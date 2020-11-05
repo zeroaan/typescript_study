@@ -157,30 +157,81 @@ const reducer = (state: ReducerState, action: ReducerActions): ReducerState => {
     }
     case OPEN_CELL: {
       const tableData = [...state.tableData];
-      tableData[action.row] = [...state.tableData[action.row]];
-      let around: number[] = [];
-      if (tableData[action.row - 1]) {
-        around = around.concat(
-          tableData[action.row - 1][action.cell - 1],
-          tableData[action.row - 1][action.cell],
-          tableData[action.row - 1][action.cell + 1]
-        );
-      }
-      around = around.concat(
-        tableData[action.row][action.cell - 1],
-        tableData[action.row][action.cell + 1]
-      );
-      if (tableData[action.row + 1]) {
-        around = around.concat(
-          tableData[action.row + 1][action.cell - 1],
-          tableData[action.row + 1][action.cell],
-          tableData[action.row + 1][action.cell + 1]
-        );
-      }
-      const count: number = around.filter((v) =>
-        [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
-      ).length;
-      tableData[action.row][action.cell] = count;
+      tableData.forEach((row, i) => {
+        tableData[i] = [...row];
+      });
+      const checked: string[] = [];
+      const checkAround = (row: number, cell: number) => {
+        if (
+          [
+            CODE.OPENED,
+            CODE.FLAG_MINE,
+            CODE.FLAG,
+            CODE.QUESTION_MINE,
+            CODE.QUESTION,
+          ].includes(tableData[row][cell])
+        ) {
+          return;
+        }
+        if (
+          row < 0 ||
+          row >= tableData.length ||
+          cell < 0 ||
+          cell >= tableData[0].length
+        ) {
+          return;
+        }
+        if (checked.includes(row + "/" + cell)) {
+          return;
+        } else {
+          checked.push(row + "/" + cell);
+        }
+        let around: number[] = [
+          tableData[row][cell - 1],
+          tableData[row][cell + 1],
+        ];
+        if (tableData[row - 1]) {
+          around = around.concat(
+            tableData[row - 1][cell - 1],
+            tableData[row - 1][cell],
+            tableData[row - 1][cell + 1]
+          );
+        }
+        if (tableData[row + 1]) {
+          around = around.concat(
+            tableData[row + 1][cell - 1],
+            tableData[row + 1][cell],
+            tableData[row + 1][cell + 1]
+          );
+        }
+        const count: number = around.filter((v) =>
+          [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
+        ).length;
+        tableData[row][cell] = count;
+        if (count === 0) {
+          if (row > -1) {
+            const near = [];
+            if (row - 1 > -1) {
+              near.push([row - 1, cell - 1]);
+              near.push([row - 1, cell]);
+              near.push([row - 1, cell + 1]);
+            }
+            near.push([row, cell - 1]);
+            near.push([row, cell + 1]);
+            if (row + 1 < tableData.length) {
+              near.push([row + 1, cell - 1]);
+              near.push([row + 1, cell]);
+              near.push([row + 1, cell + 1]);
+            }
+            near.forEach((n) => {
+              if (tableData[n[0]][n[1]] !== CODE.OPENED) {
+                checkAround(n[0], n[1]);
+              }
+            });
+          }
+        }
+      };
+      checkAround(action.row, action.cell);
       return { ...state, tableData };
     }
     case CLICK_MINE: {
