@@ -43,7 +43,7 @@ const getTdStyle = (code: number): object => {
       };
   }
 };
-const getTdText = (code: number): string => {
+const getTdText = (code: number): string | number => {
   switch (code) {
     case CODE.NORMAL:
       return "";
@@ -58,7 +58,7 @@ const getTdText = (code: number): string => {
     case CODE.QUESTION_MINE:
       return "?";
     default:
-      return "";
+      return code || "";
   }
 };
 
