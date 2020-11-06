@@ -1,3 +1,4 @@
+import produce from "immer";
 import { ADD_POST, AddPostAction } from "../actions/post";
 
 const initialState: string[] = [];
@@ -7,12 +8,15 @@ const postReducer = (
   prevState = initialState,
   action: PostReducerActions
 ): string[] => {
-  switch (action.type) {
-    case ADD_POST:
-      return [...prevState];
-    default:
-      return prevState;
-  }
+  return produce(prevState, (draft) => {
+    switch (action.type) {
+      case ADD_POST:
+        draft.push(action.data);
+        break;
+      default:
+        break;
+    }
+  });
 };
 
 export default postReducer;
