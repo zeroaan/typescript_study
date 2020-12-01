@@ -3,4 +3,4 @@ import * as ReactDOM from "react-dom";
 
 import NumberBaseball from "./NumberBaseball";
 
-ReactDOM.render(<Hot />, document.querySelector("#root"));
+ReactDOM.render(<NumberBaseball />, document.querySelector("#root"));
